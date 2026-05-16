@@ -66,7 +66,7 @@ export function AppShell({
       <aside className="hidden w-56 shrink-0 border-r border-border bg-surface/40 lg:flex lg:flex-col">
         <div className="flex h-14 items-center gap-2 border-b border-border px-4">
           <Link href="/dashboard" className="flex items-center gap-2" aria-label="Dashboard home">
-            <SentyrnMark className="h-8 w-8" />
+            <SentyrnMark className="h-8 w-auto" />
           </Link>
         </div>
         <ScrollArea className="flex-1 px-3 py-4">
@@ -91,7 +91,7 @@ export function AppShell({
             <SheetContent side="left" className="w-72 border-border bg-canvas p-0">
               <SheetHeader className="border-b border-border px-4 py-3 text-left">
                 <SheetTitle className="flex items-center gap-2 text-ink">
-                  <SentyrnMark className="h-8 w-8" />
+                  <SentyrnMark className="h-8 w-auto" />
                   <span className="sr-only">Navigation</span>
                 </SheetTitle>
               </SheetHeader>
@@ -101,7 +101,7 @@ export function AppShell({
             </SheetContent>
           </Sheet>
           <Link href="/dashboard" aria-label="Dashboard home">
-            <SentyrnMark className="h-8 w-8" />
+            <SentyrnMark className="h-8 w-auto" />
           </Link>
         </div>
         <Button variant="ghost" size="sm" asChild>
