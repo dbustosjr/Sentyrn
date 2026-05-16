@@ -1,15 +1,23 @@
+import { redirect } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { getCurrentUser } from "@/lib/auth/session";
+import { getWorkspaceContext } from "@/lib/data/workspace";
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
+  const ctx = await getWorkspaceContext(user);
+  if (!ctx) redirect("/login");
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight text-ink">Settings</h1>
-        <p className="mt-1 text-sm text-frost">Workspace preferences · persistence in Phase 2</p>
+        <p className="mt-1 text-sm text-frost">Workspace and account · backed by InsForge</p>
       </div>
       <Tabs defaultValue="general" className="w-full">
         <TabsList className="border border-border bg-surface/60">
@@ -21,14 +29,17 @@ export default function SettingsPage() {
           <Card className="border-border bg-surface/40">
             <CardHeader>
               <CardTitle className="text-ink">Profile</CardTitle>
-              <CardDescription className="text-frost">Display name and email come from InsForge Auth.</CardDescription>
+              <CardDescription className="text-frost">From InsForge Auth (read-only in Phase 2).</CardDescription>
             </CardHeader>
             <CardContent className="max-w-md space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="dn">Display name</Label>
-                <Input id="dn" disabled placeholder="Ada Lovelace" />
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" value={user.email ?? ""} disabled readOnly />
               </div>
-              <Button disabled>Save</Button>
+              <div className="space-y-2">
+                <Label htmlFor="dn">Display name</Label>
+                <Input id="dn" value={user.name ?? ""} disabled readOnly />
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -36,18 +47,31 @@ export default function SettingsPage() {
           <Card className="border-border bg-surface/40">
             <CardHeader>
               <CardTitle className="text-ink">Workspace</CardTitle>
-              <CardDescription className="text-frost">Members, roles, and repos — Phase 2.</CardDescription>
+              <CardDescription className="text-frost">Tenant boundary for sessions and policies.</CardDescription>
             </CardHeader>
-            <CardContent className="text-sm text-frost">Placeholder panel.</CardContent>
+            <CardContent className="max-w-md space-y-3 text-sm">
+              <div>
+                <p className="text-frost">Name</p>
+                <p className="text-ink">{ctx.workspace.name}</p>
+              </div>
+              <div>
+                <p className="text-frost">Slug</p>
+                <p className="font-mono text-ink">{ctx.workspace.slug}</p>
+              </div>
+              <div>
+                <p className="text-frost">Retention</p>
+                <p className="text-ink">{ctx.workspace.retention_days} days</p>
+              </div>
+            </CardContent>
           </Card>
         </TabsContent>
         <TabsContent value="privacy" className="mt-4">
           <Card className="border-border bg-surface/40">
             <CardHeader>
               <CardTitle className="text-ink">Privacy mode</CardTitle>
-              <CardDescription className="text-frost">Safe / Standard / Full — see privacy-model.md</CardDescription>
+              <CardDescription className="text-frost">Default telemetry mode for this workspace.</CardDescription>
             </CardHeader>
-            <CardContent className="text-sm text-frost">Default workspace mode will be enforced server-side in Phase 2.</CardContent>
+            <CardContent className="text-sm text-ink capitalize">{ctx.workspace.privacy_mode}</CardContent>
           </Card>
         </TabsContent>
       </Tabs>

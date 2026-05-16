@@ -16,6 +16,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { signOutAction } from "@/app/actions/auth";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -72,9 +73,14 @@ export function AppShell({
         <ScrollArea className="flex-1 px-3 py-4">
           <NavLinks />
         </ScrollArea>
-        <div className="border-t border-border p-3">
-          <Button variant="outline" size="sm" className="w-full border-border text-frost" asChild>
-            <Link href="/">Exit to marketing</Link>
+        <div className="space-y-2 border-t border-border p-3">
+          <form action={signOutAction}>
+            <Button type="submit" variant="outline" size="sm" className="w-full border-border text-frost">
+              Sign out
+            </Button>
+          </form>
+          <Button variant="ghost" size="sm" className="w-full text-frost" asChild>
+            <Link href="/">Marketing site</Link>
           </Button>
         </div>
       </aside>
