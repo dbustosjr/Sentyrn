@@ -1,8 +1,4 @@
-import Image from "next/image";
 import { cn } from "@/lib/utils";
-
-const MARK_WIDTH = 1024;
-const MARK_HEIGHT = 682;
 
 type Props = {
   className?: string;
@@ -10,19 +6,24 @@ type Props = {
   "aria-label"?: string;
 };
 
-/** S mark asset — product chrome and favicon contexts; pair with wordmark on landing only. */
+/**
+ * Native img (not next/image) so the optimizer does not flatten PNG alpha onto black.
+ * Asset: /public/brand/sentyrn-mark.png (cropped, transparent).
+ */
 export function SentyrnMark({
   className,
   priority = false,
   "aria-label": ariaLabel = "Sentyrn",
 }: Props) {
   return (
-    <Image
+    // eslint-disable-next-line @next/next/no-img-element -- preserve PNG transparency
+    <img
       src="/brand/sentyrn-mark.png"
       alt={ariaLabel}
-      width={MARK_WIDTH}
-      height={MARK_HEIGHT}
-      priority={priority}
+      width={245}
+      height={219}
+      decoding="async"
+      fetchPriority={priority ? "high" : "auto"}
       className={cn("h-10 w-auto shrink-0 object-contain md:h-12", className)}
     />
   );
